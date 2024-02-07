@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.languages-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 150px;
+  padding: 20px;
+  justify-content: center; /* Center grid items horizontally */
+  align-content: center; /* Center grid items vertically */
+  min-height: 100vh; /* Make the grid container at least as tall as the viewport */
+}
+
+.language-box {
+  width: 300px; /* Fixed width for all boxes */
+  height: 300px; /* Fixed height for all boxes */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.language-box img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover; /* This will cover the area without stretching the image */
+}
+
+.language-box:hover {
+  transform: scale(1.05);
+}
