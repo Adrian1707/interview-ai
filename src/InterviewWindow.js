@@ -4,6 +4,7 @@ import { callOpenAI } from './api.js'
 import { buildInitialPrompt } from './prompt-builder.js'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { solarizedlight } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import Loader from './Loader'
 
 const InterviewWindow = () => {
   const location = useLocation();
@@ -13,6 +14,7 @@ const InterviewWindow = () => {
   ])
   const [message, setMessage] = useState('');
   const [chat, setChat] = useState([]);
+  const [isLoading, setIsLoading] = useState(true)
 
   const fetchData = async () => {
     try {
@@ -27,6 +29,7 @@ const InterviewWindow = () => {
     fetchData().then(response => {
       setMessages(currentMessages => [...currentMessages, {'role': "system", 'content': response}]);
       setChat(currentChat => [...currentChat, {content: response, user: 'bot'}]);
+      setIsLoading(false)
     });
   }, []);
 
@@ -36,6 +39,7 @@ const InterviewWindow = () => {
     setChat(currentChat => [...currentChat, {content: message, user: 'human'}]);
 
     setMessages(currentMessages => {
+        setIsLoading(true)
         const updatedMessages = [...currentMessages, {'role': "user", 'content': message}];
 
         (async () => {
@@ -45,6 +49,7 @@ const InterviewWindow = () => {
 
                 setMessages(currentMessages => [...currentMessages, {'role': "assistant", 'content': response}]);
                 setChat(currentChat => [...currentChat, {content: response, user: 'bot'}]);
+                setIsLoading(false)
             } catch (error) {
                 console.error('Error calling OpenAI:', error);
             }
@@ -92,6 +97,7 @@ const InterviewWindow = () => {
 
 return (
   <div className="flex flex-col h-screen">
+    {isLoading && <Loader />}
     <div className="flex-grow overflow-auto p-4">
       {chat.map((message, index) => (
         <div

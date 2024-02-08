@@ -1,0 +1,17 @@
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loader {
+  border: 4px solid #f3f3f3; /* Light grey */
+  border-top: 4px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 200px;
+  height: 200px;
+  animation: spin 2s linear infinite;
+  position: fixed; /* Fixed position */
+  top: 40%; /* Position the top edge of the element in the middle of the screen */
+  left: 40%; /* Position the left edge of the element in the middle of the screen */
+  transform: translate(-50%, -50%); /* Shift the element back by half its own width and height */
+}
