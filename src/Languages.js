@@ -12,7 +12,7 @@ const Languages = () => {
   const navigate = useNavigate();
 
   const onLanguageSelect = (language) => {
-    navigate('/interview');
+    navigate(`/interview/${language.code}`);
   };
 
   return (

@@ -1,14 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { callOpenAI } from './api.js'
 
 const InterviewWindow = () => {
+  let { language } = useParams();
+  const [messages, setMessages] = useState([
+    {"role": "system", "content": `You are interviewing a candidate for a senior ${language} developer role. You will present a list of questions to the interviewee to assess their suitability for a senior ${language} position. Give me 1 question to get started`}
+  ])
   const [message, setMessage] = useState('');
   const [chat, setChat] = useState([]);
 
-  const sendMessage = (event) => {
-    event.preventDefault();
-    setChat([...chat, message]);
-    setMessage('');
+  const fetchData = async () => {
+    try {
+      const response = await callOpenAI(messages, language);
+      return response;
+    } catch (error) {
+      console.error('Error calling OpenAI:', error);
+    }
   };
+
+  useEffect(() => {
+    fetchData().then(response => {
+      setMessages(currentMessages => [...currentMessages, {'role': "system", 'content': response}]);
+      setChat(currentChat => [...currentChat, response]);
+    });
+  }, []);
+
+  const sendMessage = async (event) => {
+    event.preventDefault();
+
+    setChat(currentChat => [...currentChat, message]);
+
+    setMessages(currentMessages => {
+        const updatedMessages = [...currentMessages, {'role': "user", 'content': message}];
+
+        (async () => {
+            try {
+
+                const response = await callOpenAI(updatedMessages, language);
+
+                setMessages(currentMessages => [...currentMessages, {'role': "system", 'content': response}]);
+                setChat(currentChat => [...currentChat, response]);
+            } catch (error) {
+                console.error('Error calling OpenAI:', error);
+            }
+        })();
+
+
+        return updatedMessages;
+    });
+
+    setMessage('');
+};
 
   return (
     <div className="flex flex-col h-screen">
