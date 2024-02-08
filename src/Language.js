@@ -18,12 +18,16 @@ const Language = ({ language }) => {
      setIsVisible(true)
    };
 
+   const handleCloseModal = () => {
+     setIsVisible(false);
+   };
+
    return (
      <div>
        <div className="language-box" onClick={() => onSelect(language)}>
          <img src={imagePath} alt={language.name} style={imageStyle} />
        </div>
-       { isVisible && <InterviewSettingsModal language={language.name} /> }
+       { isVisible && <InterviewSettingsModal language={language.name} onClose={handleCloseModal} /> }
      </div>
    );
 };
