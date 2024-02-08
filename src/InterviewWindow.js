@@ -22,14 +22,14 @@ const InterviewWindow = () => {
   useEffect(() => {
     fetchData().then(response => {
       setMessages(currentMessages => [...currentMessages, {'role': "system", 'content': response}]);
-      setChat(currentChat => [...currentChat, response]);
+      setChat(currentChat => [...currentChat, {content: response, user: 'bot'}]);
     });
   }, []);
 
   const sendMessage = async (event) => {
     event.preventDefault();
 
-    setChat(currentChat => [...currentChat, message]);
+    setChat(currentChat => [...currentChat, {content: message, user: 'human'}]);
 
     setMessages(currentMessages => {
         const updatedMessages = [...currentMessages, {'role': "user", 'content': message}];
@@ -40,7 +40,7 @@ const InterviewWindow = () => {
                 const response = await callOpenAI(updatedMessages, language);
 
                 setMessages(currentMessages => [...currentMessages, {'role': "system", 'content': response}]);
-                setChat(currentChat => [...currentChat, response]);
+                setChat(currentChat => [...currentChat, {content: response, user: 'bot'}]);
             } catch (error) {
                 console.error('Error calling OpenAI:', error);
             }
@@ -53,12 +53,16 @@ const InterviewWindow = () => {
     setMessage('');
 };
 
-  return (
-    <div className="flex flex-col h-screen">
+return (
+  <div className="flex flex-col h-screen">
     <div className="flex-grow overflow-auto p-4">
       {chat.map((message, index) => (
-        <div key={index} className="p-2 bg-blue-200 rounded mb-2">
-          {message}
+        <div
+          key={index}
+          className={`p-2 rounded mb-2 ${message.user === "human" ? "bg-blue-200 ml-auto" : "bg-green-200 mr-auto"}`}
+          style={{ maxWidth: "70%" }}
+        >
+          {message.content}
         </div>
       ))}
     </div>
@@ -74,8 +78,8 @@ const InterviewWindow = () => {
       </button>
     </form>
   </div>
+);
 
-  );
 };
 
 export default InterviewWindow;
