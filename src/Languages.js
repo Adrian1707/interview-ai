@@ -12,6 +12,7 @@ const Languages = () => {
     { id: 6, name: 'CSS', code: 'css' },
     { id: 7, name: 'Redux', code: 'redux' },
     { id: 8, name: 'SQL', code: 'sql' },
+    { id: 9, name: 'Javascript', code: 'javascript' },
   ];
   return (
     <div className="languages-grid">
