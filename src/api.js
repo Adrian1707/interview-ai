@@ -7,9 +7,9 @@ export const callOpenAI = async (messages, language) => {
       'Authorization': `Bearer ${process.env.REACT_APP_OPENAPI_API_KEY}`
     },
     body: JSON.stringify({
-      model: 'gpt-3.5-turbo-0125', 
+      model: 'gpt-3.5-turbo-0125',
       messages: messages,
-      temperature: 0.5,
+      temperature: 0.9,
       max_tokens: 500,
     })
   });
