@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { callOpenAI } from './api.js'
 import { buildInitialPrompt } from './prompt-builder.js'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { solarizedlight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 const InterviewWindow = () => {
-  let { language } = useParams();
+  const location = useLocation();
+  const { experienceLevel, interviewerPersonality, language } = location.state || {};
   const [messages, setMessages] = useState([
-    {"role": "system", "content": buildInitialPrompt(language, 'senior', 'difficult')}
+    {"role": "system", "content": buildInitialPrompt(language, experienceLevel, interviewerPersonality)}
   ])
   const [message, setMessage] = useState('');
   const [chat, setChat] = useState([]);
@@ -42,7 +43,7 @@ const InterviewWindow = () => {
 
                 const response = await callOpenAI(updatedMessages, language);
 
-                setMessages(currentMessages => [...currentMessages, {'role': "system", 'content': response}]);
+                setMessages(currentMessages => [...currentMessages, {'role': "assistant", 'content': response}]);
                 setChat(currentChat => [...currentChat, {content: response, user: 'bot'}]);
             } catch (error) {
                 console.error('Error calling OpenAI:', error);

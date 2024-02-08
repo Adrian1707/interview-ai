@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import Language from './Language';
 import './Languages.css';
 
@@ -14,17 +13,10 @@ const Languages = () => {
     { id: 7, name: 'Redux', code: 'redux' },
     { id: 8, name: 'SQL', code: 'sql' },
   ];
-
-  const navigate = useNavigate();
-
-  const onLanguageSelect = (language) => {
-    navigate(`/interview/${language.code}`);
-  };
-
   return (
     <div className="languages-grid">
       {languages.map((language) => (
-        <Language key={language.id} language={language} onSelect={() => onLanguageSelect(language)} />
+        <Language key={language.id} language={language} />
       ))}
     </div>
   );

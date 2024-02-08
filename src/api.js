@@ -9,7 +9,8 @@ export const callOpenAI = async (messages, language) => {
     body: JSON.stringify({
       model: 'gpt-3.5-turbo-0125',
       messages: messages,
-      temperature: 0.9,
+      temperature: 1.5,
+      presence_penalty: 1,
       max_tokens: 500,
     })
   });

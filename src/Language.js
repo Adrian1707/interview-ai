@@ -1,18 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
+import InterviewSettingsModal from './InterviewSettingsModal';
 import './Languages.css';
 
-const Language = ({ language, onSelect }) => {
+const Language = ({ language }) => {
+  const [isVisible, setIsVisible] = useState(false);
+
   const imagePath = require(`./images/${language.code}.png`);
 
    const imageStyle = {
      width: '100%',
      height: 'auto',
-     objectFit: 'contain' 
+     objectFit: 'contain'
+   };
+
+   const onSelect = (language) => {
+     console.log("Rendering modal...")
+     setIsVisible(true)
    };
 
    return (
-     <div className="language-box" onClick={() => onSelect(language)}>
-       <img src={imagePath} alt={language.name} style={imageStyle} />
+     <div>
+       <div className="language-box" onClick={() => onSelect(language)}>
+         <img src={imagePath} alt={language.name} style={imageStyle} />
+       </div>
+       { isVisible && <InterviewSettingsModal language={language.name} /> }
      </div>
    );
 };

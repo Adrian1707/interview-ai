@@ -9,7 +9,7 @@ const App = () => {
   return (
     <Routes>
       <Route path="/" element={<Languages />} />
-      <Route path="/interview/:language" element={<InterviewWindow />} />
+      <Route path="/interview" element={<InterviewWindow />} />
     </Routes>
   );
 };
