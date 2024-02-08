@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { callOpenAI } from './api.js'
 import { buildInitialPrompt } from './prompt-builder.js'
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { solarizedlight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 const InterviewWindow = () => {
   let { language } = useParams();
   const [messages, setMessages] = useState([
-    {"role": "system", "content": buildInitialPrompt(language, 'junior', 'kind')}
+    {"role": "system", "content": buildInitialPrompt(language, 'senior', 'difficult')}
   ])
   const [message, setMessage] = useState('');
   const [chat, setChat] = useState([]);
@@ -52,7 +54,40 @@ const InterviewWindow = () => {
     });
 
     setMessage('');
-};
+  };
+
+  const formatAndDisplayMessage = (message) => {
+    // Regular expression to match the code block and its language
+    const codeBlockRegex = /```(\w+)\s([\s\S]*?)```/;
+    const match = message.match(codeBlockRegex);
+
+    if (match) {
+      const language = match[1];
+      const code = match[2];
+
+      const recognizedLanguages = [language]
+      const isLanguageRecognized = recognizedLanguages.includes(language.toLowerCase());
+
+      return (
+        <div>
+          {/* Display the message part before the code block */}
+          {message.substring(0, match.index)}
+          {/* SyntaxHighlighter to display the code block */}
+          <SyntaxHighlighter
+            language={isLanguageRecognized ? language : 'plaintext'}
+            style={solarizedlight}
+          >
+            {code}
+          </SyntaxHighlighter>
+          {/* Display the message part after the code block */}
+          {message.substring(match.index + match[0].length)}
+        </div>
+      );
+    }
+
+    // Return the original message if no code block is found
+    return <div>{message}</div>;
+  };
 
 return (
   <div className="flex flex-col h-screen">
@@ -63,7 +98,7 @@ return (
           className={`p-2 rounded mb-2 ${message.user === "human" ? "bg-blue-200 ml-auto" : "bg-green-200 mr-auto"}`}
           style={{ maxWidth: "70%" }}
         >
-          {message.content}
+          {formatAndDisplayMessage(message.content)}
         </div>
       ))}
     </div>
